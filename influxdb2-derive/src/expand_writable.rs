@@ -62,7 +62,7 @@ pub fn impl_writeable(tokens: TokenStream) -> TokenStream {
                         if let Some(ref value) = self.#ident {
                             w.write_all(format!("{}", #ident_str).as_bytes())?;
                             w.write_all(b"=")?;
-                            w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(value).into_bytes().as_slice())?;
+                            w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(&self.#ident).into_bytes().as_slice())?;
                         }
                     })
                 } else {
