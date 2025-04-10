@@ -120,7 +120,7 @@ pub fn impl_writeable(tokens: TokenStream) -> TokenStream {
 
     let mut combined_tag_writes = vec![];
     for (index, tag_write) in tag_writes.iter().enumerate() {
-        if index > 0 {
+        if index > 0 && !tag_write.is_empty() {
             combined_tag_writes.push(quote!(w.write_all(b",")?;));
         }
         combined_tag_writes.push(tag_write.clone());
