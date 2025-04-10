@@ -49,31 +49,55 @@ pub fn impl_writeable(tokens: TokenStream) -> TokenStream {
             .collect(),
         _ => panic!("a struct without named fields is not supported"),
     };
+    let mut t_idx = 0;
     let tag_writes: Vec<TokenStream2> = fields
         .iter()
-        .filter_map(|f| match f.field_type {
-            FieldType::Tag => {
-                let ident = f.ident.clone();
-                let ident_str = ident.to_string();
-                let kind = f.kind.clone();
+        .filter_map(|f| {
+            t_idx += 1;
+            match f.field_type {
+                FieldType::Tag => {
+                    let ident = f.ident.clone();
+                    let ident_str = ident.to_string();
+                    let kind = f.kind.clone();
 
-                if is_option_type(&kind) {
-                    Some(quote! {
-                        if let Some(ref value) = self.#ident {
-                            w.write_all(format!("{}", #ident_str).as_bytes())?;
-                            w.write_all(b"=")?;
-                            w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(&self.#ident).into_bytes().as_slice())?;
+                    if is_option_type(&kind) {
+                        if t_idx == 1 {
+                            Some(quote! {
+                                if let Some(ref value) = self.#ident {
+                                    w.write_all(format!("{}", #ident_str).as_bytes())?;
+                                    w.write_all(b"=")?;
+                                    w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(&self.#ident).into_bytes().as_slice())?;
+                                }
+                            })
+                        } else {
+                            Some(quote! {
+                                if let Some(ref value) = self.#ident {
+                                    w.write_all(b",");
+                                    w.write_all(format!("{}", #ident_str).as_bytes())?;
+                                    w.write_all(b"=")?;
+                                    w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(&self.#ident).into_bytes().as_slice())?;
+                                }
+                            })    
                         }
-                    })
-                } else {
-                    Some(quote! {
-                        w.write_all(format!("{}", #ident_str).as_bytes())?;
-                        w.write_all(b"=")?;
-                        w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(&self.#ident).into_bytes().as_slice())?;
-                    })
+                    } else {
+                        if t_idx == 1 {
+                            Some(quote! {
+                                w.write_all(format!("{}", #ident_str).as_bytes())?;
+                                w.write_all(b"=")?;
+                                w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(&self.#ident).into_bytes().as_slice())?;
+                            })
+                        } else  {
+                            Some(quote! {
+                                w.write_all(b",");
+                                w.write_all(format!("{}", #ident_str).as_bytes())?;
+                                w.write_all(b"=")?;
+                                w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(&self.#ident).into_bytes().as_slice())?;
+                            })
+                        }
+                    }
                 }
+                _ => None,
             }
-            _ => None,
         })
         .collect();
 
@@ -120,9 +144,9 @@ pub fn impl_writeable(tokens: TokenStream) -> TokenStream {
 
     let mut combined_tag_writes = vec![];
     for (index, tag_write) in tag_writes.iter().enumerate() {
-        if index > 0 && !tag_write.is_empty() {
-            combined_tag_writes.push(quote!(w.write_all(b",")?;));
-        }
+        // if index > 0 {
+        //     combined_tag_writes.push(quote!(w.write_all(b",")?;));
+        // }
         combined_tag_writes.push(tag_write.clone());
     }
 
