@@ -2,6 +2,7 @@ use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::{format_ident, quote};
 use syn::{parse_macro_input, Field, Fields, Ident, ItemStruct, Lit, Meta, MetaNameValue, Type};
+use syn::{GenericArgument, PathArguments};
 
 const INFLUX_TAG: &str = "influxdb";
 
@@ -55,11 +56,22 @@ pub fn impl_writeable(tokens: TokenStream) -> TokenStream {
                 let ident = f.ident.clone();
                 let ident_str = ident.to_string();
                 let kind = f.kind.clone();
-                Some(quote! {
-                    w.write_all(format!("{}", #ident_str).as_bytes())?;
-                    w.write_all(b"=")?;
-                    w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(&self.#ident).into_bytes().as_slice())?;
-                })
+
+                if is_option_type(&kind) {
+                    Some(quote! {
+                        if let Some(ref value) = self.#ident {
+                            w.write_all(format!("{}", #ident_str).as_bytes())?;
+                            w.write_all(b"=")?;
+                            w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(value).into_bytes().as_slice())?;
+                        }
+                    })
+                } else {
+                    Some(quote! {
+                        w.write_all(format!("{}", #ident_str).as_bytes())?;
+                        w.write_all(b"=")?;
+                        w.write_all(<#kind as #writable_krate::KeyWritable>::encode_key(&self.#ident).into_bytes().as_slice())?;
+                    })
+                }
             }
             _ => None,
         })
@@ -148,6 +160,26 @@ pub fn impl_writeable(tokens: TokenStream) -> TokenStream {
         }
     };
     output.into()
+}
+
+fn is_option_type(ty: &Type) -> bool {
+    if let Type::Path(type_path) = ty {
+        if let Some(segment) = type_path.path.segments.last() {
+            if segment.ident == "Option" {
+                if let PathArguments::AngleBracketed(args) = &segment.arguments {
+                    !args.args.is_empty()
+                } else {
+                    false
+                }
+            } else {
+                false
+            }
+        } else {
+            false
+        }
+    } else {
+        false
+    }
 }
 
 fn krate() -> TokenStream2 {
