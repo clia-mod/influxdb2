@@ -5,7 +5,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let influx_url = "http://localhost:8086";
     let token = "some-token";
 
-    let builder = influxdb2::ClientBuilder::with_builder(
+    let builder = clia_influxdb2::ClientBuilder::with_builder(
         reqwest::ClientBuilder::new().user_agent(APP_USER_AGENT),
         influx_url,
         "org",

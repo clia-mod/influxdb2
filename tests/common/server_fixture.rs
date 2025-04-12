@@ -113,10 +113,10 @@ impl ServerFixture {
     }
 
     /// Return a client suitable for communicating with this server
-    pub fn client(&self) -> influxdb2::Client {
+    pub fn client(&self) -> clia_influxdb2::Client {
         match self.server.admin_token.as_ref() {
-            Some(token) => influxdb2::Client::new(self.http_base(), "org", token),
-            None => influxdb2::Client::new(self.http_base(), "org", ""),
+            Some(token) => clia_influxdb2::Client::new(self.http_base(), "org", token),
+            None => clia_influxdb2::Client::new(self.http_base(), "org", ""),
         }
     }
 
@@ -298,7 +298,7 @@ impl TestServer {
 
         // Onboard, if requested.
         if initial_config == InitialConfig::Onboarded {
-            let client = influxdb2::Client::new(&self.http_base, "org", "");
+            let client = clia_influxdb2::Client::new(&self.http_base, "org", "");
             let response = client
                 .onboarding(
                     ADMIN_TEST_USER,

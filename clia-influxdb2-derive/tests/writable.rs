@@ -29,7 +29,7 @@ struct Item2 {
     time: u64,
 }
 fn main() {
-    use clia_influxdb2::models::WriteDataPoint;
+    use influxdb2::models::WriteDataPoint;
     use std::io::Write;
     let item = Item {
         name: "foo".to_string(),

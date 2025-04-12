@@ -1,8 +1,8 @@
 use futures::prelude::*;
 
-use influxdb2::api::write::TimestampPrecision;
-use influxdb2::models::DataPoint;
-use influxdb2::Client;
+use clia_influxdb2::api::write::TimestampPrecision;
+use clia_influxdb2::models::DataPoint;
+use clia_influxdb2::Client;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

@@ -11,7 +11,7 @@ async fn get_health() -> Result {
 
     let res = client.health().await?;
 
-    assert_eq!(res.status, influxdb2::models::Status::Pass);
+    assert_eq!(res.status, clia_influxdb2::models::Status::Pass);
 
     Ok(())
 }

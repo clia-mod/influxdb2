@@ -32,7 +32,7 @@ async fn new_server_needs_onboarded() -> Result {
 
     assert!(matches!(
         err,
-        influxdb2::RequestError::Http {
+        clia_influxdb2::RequestError::Http {
             status: reqwest::StatusCode::UNAUTHORIZED,
             ..
         }
@@ -81,7 +81,7 @@ async fn onboarding() -> Result {
 
     assert!(matches!(
         err,
-        influxdb2::RequestError::Http {
+        clia_influxdb2::RequestError::Http {
             status: reqwest::StatusCode::UNPROCESSABLE_ENTITY,
             ..
         }

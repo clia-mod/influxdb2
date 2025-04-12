@@ -1,10 +1,10 @@
 use std::env;
 
 use chrono::{DateTime, FixedOffset, TimeZone, Utc};
+use clia_influxdb2::models::DataPoint;
+use clia_influxdb2::models::Query;
+use clia_influxdb2::{Client, FromDataPoint};
 use futures::stream;
-use influxdb2::models::DataPoint;
-use influxdb2::models::Query;
-use influxdb2::{Client, FromDataPoint};
 
 #[derive(Debug, FromDataPoint)]
 pub struct StockPrice {

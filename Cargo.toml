@@ -1,11 +1,11 @@
 [package]
-name = "influxdb2"
+name = "clia-influxdb2"
 version = "0.5.2"
-authors = ["Armin Primadi <aprimadi@gmail.com>", "Paul Dix <paul@pauldix.net>"]
+authors = ["Armin Primadi <aprimadi@gmail.com>", "Paul Dix <paul@pauldix.net>", "clia <helloclia@gmail.com>"]
 keywords = ["influxdb", "influxdb2", "influxdb-client"]
-description = "Influxdb 2 client library for rust"
-homepage = "https://github.com/aprimadi/influxdb2"
-repository = "https://github.com/aprimadi/influxdb2"
+description = "Influxdb 2 client library for rust (clia-mod)"
+homepage = "https://github.com/clia-mod/influxdb2"
+repository = "https://github.com/clia-mod/influxdb2"
 license = "MIT"
 edition = "2018"
 
@@ -17,7 +17,7 @@ gzip = ["reqwest/gzip", "dep:async-compression", "dep:tokio-util"]
 
 [dependencies] # In alphabetical order
 influxdb2-structmap = { version = "0.2.0", path = "./influxdb2-structmap" }
-influxdb2-derive = { version = "0.1.1", path = "./influxdb2-derive" }
+influxdb2-derive = { version = "0.1.1", path = "./clia-influxdb2-derive", package = "clia-influxdb2-derive" }
 
 # crates.io dependencies
 base64 = "0.13"

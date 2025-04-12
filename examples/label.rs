@@ -5,7 +5,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let influx_url = "http://localhost:8888";
     let token = "some-token";
 
-    let client = influxdb2::Client::new(influx_url, "org", token);
+    let client = clia_influxdb2::Client::new(influx_url, "org", token);
 
     println!("{:?}", client.labels().await?);
     println!("{:?}", client.labels_by_org("some-org_id").await?);

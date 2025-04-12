@@ -22,7 +22,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let influx_url = "http://localhost:8086";
     let token = std::env::var("INFLUXDB2_TOKEN").unwrap();
 
-    let client = influxdb2::Client::new(influx_url, org, token);
+    let client = clia_influxdb2::Client::new(influx_url, org, token);
 
     let points = vec![
         CpuLoadShort {

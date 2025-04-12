@@ -1,7 +1,7 @@
 [package]
-name = "influxdb2-derive"
-description = "Proc derive macro for Influxdb"
-authors = ["Armin Primadi <aprimadi@gmail.com>", "ex0dus-0x <ex0dus@codemuch.tech>"]
+name = "clia-influxdb2-derive"
+description = "Proc derive macro for Influxdb (clia-mod)"
+authors = ["Armin Primadi <aprimadi@gmail.com>", "ex0dus-0x <ex0dus@codemuch.tech>", "clia <helloclia@gmail.com>"]
 license = "MIT"
 version = "0.1.1"
 edition = "2018"
